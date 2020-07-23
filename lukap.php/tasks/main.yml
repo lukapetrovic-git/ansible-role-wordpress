@@ -1,0 +1,32 @@
+---
+# tasks file for lukap.php
+    
+- name: Add the Ondrej PPA
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    
+- name: Update the apt cache
+  apt:
+    update_cache: yes
+  changed_when: false
+    
+- name: Install PHP
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - php7.2-cli
+    - php
+    - php-fpm
+    - php-mysql
+    - php-xml
+    
+- name: Remove Apache2
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: yes
+  loop:
+    - apache2
+    - apach2-utils
