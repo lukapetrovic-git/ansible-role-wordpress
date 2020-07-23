@@ -1,0 +1,50 @@
+---
+# tasks file for lukap.mysql
+
+- name: Install MySql
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - mysql-server-5.7
+    - python-mysqldb
+    - python3-mysqldb
+
+- name: Generate new MySql root password
+  command: /usr/bin/openssl rand -hex 32 creates=/root/.my.cnf
+  register: mysql_new_root_pass
+    
+- name: Remove anonymous users
+  mysql_user:
+    name: ""
+    state: absent
+  when: mysql_new_root_pass.changed
+
+- name: Remove test database
+  mysql_db:
+    name: test
+    state: absent
+  when: mysql_new_root_pass.changed
+    
+- name: Output new root password
+  debug:
+    msg: New root password is "{{ mysql_new_root_pass.stdout }}"
+    
+- name: Update root password
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ mysql_new_root_pass.stdout }}"
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+  when: mysql_new_root_pass.changed
+    
+- name: Create my.cnf
+  template:
+    src: my.cnf
+    dest: /root/.my.cnf
+  when: mysql_new_root_pass.changed
+
