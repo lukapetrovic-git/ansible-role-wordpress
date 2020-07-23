@@ -1,0 +1,14 @@
+---
+# tasks file for lukap.common
+
+- name: Set discovered Ansible Python interpreter
+  set_fact:
+    ansible_python_interpreter: "{{ ansible_facts.python.executable }}"    
+    when: ansible_python_interpreter is not defined
+
+- name: Install required tools
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - unzip
