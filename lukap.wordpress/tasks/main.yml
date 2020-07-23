@@ -1,0 +1,51 @@
+---
+# tasks file for lukap.wordpress
+    
+- name: Get WordPress checksum
+  uri:
+    url: https://wordpress.org/latest.zip.sha1
+    return_content: yes
+  register: wp_checksum
+    
+- name: Create folder home/wordpress
+  file:
+    path: /home/wordpress
+    state: directory
+    mode: '0755'
+    
+- name: Download WordPress
+  get_url:
+    url: https://wordpress.org/latest.zip
+    dest: /home/wordpress.zip
+    checksum: sha1:"{{ wp_checksum.content }}"
+    
+- name: Unzip WordPress
+  unarchive:
+    src: /home/wordpress.zip
+    dest: /home/
+    copy: no
+    
+- name: Copy WordPress files
+  copy:
+    src: /home/wordpress/.
+    dest: /var/www/{{domain}}
+    remote_src: yes
+    
+- name: Create Wordpress MySQL database
+  mysql_db:
+    name: "{{ database_name }}"
+    state: present
+    config_file: /root/.my.cnf
+
+- name: Create WordPress MySQL user
+  mysql_user:
+    name: "{{ database_user }}"
+    host: localhost
+    password: "{{ database_password }}"
+    priv: "{{ database_name }}.*:ALL"
+
+- name: Create WordPress config
+  template:
+    src: wp-config.php
+    dest: /var/www/{{domain}}/wp-config.php
+

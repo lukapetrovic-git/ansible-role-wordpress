@@ -1,0 +1,7 @@
+---
+dependencies:
+  - role: lukap.common
+  - role: lukap.php
+  - role: lukap.nginx
+  - role: lukap.mysql
+  
