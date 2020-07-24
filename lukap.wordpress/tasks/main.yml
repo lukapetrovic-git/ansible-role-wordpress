@@ -6,28 +6,22 @@
     url: https://wordpress.org/latest.zip.sha1
     return_content: yes
   register: wp_checksum
-    
-- name: Create folder home/wordpress
-  file:
-    path: /home/wordpress
-    state: directory
-    mode: '0755'
-    
+
 - name: Download WordPress
   get_url:
     url: https://wordpress.org/latest.zip
-    dest: /home/wordpress.zip
+    dest: /home/{{ansible_user}}/wordpress.zip
     checksum: sha1:"{{ wp_checksum.content }}"
     
 - name: Unzip WordPress
   unarchive:
-    src: /home/wordpress.zip
-    dest: /home/
+    src: /home/{{ansible_user}}/wordpress.zip
+    dest: /home/{{ansible_user}}/
     copy: no
     
 - name: Copy WordPress files
   copy:
-    src: /home/wordpress/.
+    src: /home/{{ansible_user}}/wordpress/.
     dest: /var/www/{{domain}}
     remote_src: yes
     
