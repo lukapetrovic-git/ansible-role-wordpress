@@ -5,7 +5,7 @@ Wordpress role for Ansible with MySql, Nginx, PHP
 No special requirements, note that this role requires root access, so either run with a global become: yes, or invoke the role in your playbook.
 
 # Role Variables
-Variables used in the role are listed below:
+Variables used in the role are all listed below:
 
 database_name:
 database_user:
