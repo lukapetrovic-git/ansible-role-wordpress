@@ -7,6 +7,8 @@ No special requirements, note that this role requires root access, so either run
 # Role Variables
 Variables used in the role are all listed below:
 
+```
 database_name:
 database_user:
 database_password:
+```
