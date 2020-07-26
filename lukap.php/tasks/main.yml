@@ -29,4 +29,4 @@
     purge: yes
   loop:
     - apache2
-    - apach2-utils
+    - apache2-utils
