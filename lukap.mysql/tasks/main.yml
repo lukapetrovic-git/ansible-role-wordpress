@@ -7,7 +7,6 @@
     state: present
   loop:
     - mysql-server-5.7
-    - python-mysqldb
     - python3-mysqldb
 
 - name: Generate new MySql root password
